@@ -7,7 +7,7 @@ Standard library only (fcntl/mmap ioctls). Usage:
   python3 bench_uvc.py rounds  [w= h= pf= k=1]             keep fds open; per camera STREAMON -> k frames -> STREAMOFF; round time
   python3 bench_uvc.py continuous [w= h= pf=]              all cameras streaming at once; fps per camera, CPU %, close time
 
-Devices default to every /dev/v4l/by-path/*-video-index0; pass devs=/dev/video0,/dev/video2 to override.
+Devices default to every USB camera in /dev/v4l/by-path (*-usb-0:*-video-index0); pass devs=/dev/video0,/dev/video2 to override.
 """
 import errno
 import fcntl
@@ -196,6 +196,6 @@ def continuous(devs, w=640, h=480, pf="MJPG", seconds=5):
 if __name__ == "__main__":
     args = sys.argv[1:] or ["stages"]
     kw = dict(a.split("=", 1) for a in args[1:])
-    devs = kw.pop("devs", "").split(",") if "devs" in kw else sorted(glob.glob("/dev/v4l/by-path/*-video-index0"))
+    devs = kw.pop("devs", "").split(",") if "devs" in kw else sorted(glob.glob("/dev/v4l/by-path/*-usb-0:*-video-index0"))
     kw = {k: (v if k == "pf" else int(v)) for k, v in kw.items()}
     globals()[args[0]](devs, **kw)

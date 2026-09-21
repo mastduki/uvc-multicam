@@ -104,7 +104,9 @@ if __name__ == "__main__":  # self-check: python3 uvc_stream.py /dev/video0 /dev
     import sys
     import time
 
-    cams = [Camera(d) for d in sys.argv[1:]] or [Camera("/dev/video0")]
+    import glob
+    devs = sys.argv[1:] or sorted(glob.glob("/dev/v4l/by-path/*-usb-0:*-video-index0"))
+    cams = [Camera(d) for d in devs]
     t0 = time.perf_counter()
     for c in cams:
         c.open()

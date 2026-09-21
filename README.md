@@ -23,7 +23,7 @@ Per-stage cost of one 720p MJPEG capture, measured at the ioctl level (`bench_uv
 | Stage | Time |
 |---|---|
 | `open()` | 0 ms |
-| `VIDIOC_S_FMT` (UVC probe) | 225 ms |
+| `VIDIOC_S_FMT` (UVC probe) | 3-225 ms |
 | `REQBUFS` + `mmap` | 5 ms |
 | `VIDIOC_STREAMON` (UVC commit, firmware starts the sensor) | 470 ms |
 | first frame after STREAMON | 240-365 ms |
