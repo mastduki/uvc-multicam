@@ -1,11 +1,10 @@
 """Keep several UVC (USB) cameras streaming MJPEG at once and hand out the latest JPEG, using only the
 Python standard library (V4L2 ioctl + mmap, the kernel's "Streaming I/O (Memory Mapping)" method).
 
-Why: on a single USB 2.0 bus the isochronous budget is ~6000 B per 125 us microframe. A UVC camera's firmware
-decides how much of it a stream reserves (dwMaxPayloadTransferSize -> alternate setting). On Arducam
-B030401 (0c40:0304) 1280x720 MJPEG reserves alt 5 = 2400 B (2 streams fit), 640x480 MJPEG reserves
-alt 3 = 800 B (6 fit, 7 possible). Starting a stream (STREAMON) costs ~0.5 s of firmware time regardless
-of format, so streams are kept open and only closed when the bus must be handed to a high-resolution still.
+Why: starting a UVC stream costs the camera firmware roughly half a second to a second regardless of resolution, so
+streams are kept open and only closed when the bus must be handed to a high-resolution still. How many streams fit
+depends on the USB alternate setting each camera asks for, which the firmware derives from the resolution; pick the
+largest resolution at which all cameras still start (see bench_uvc.py fit).
 
 Struct layouts are for 64-bit Linux (aarch64 and x86-64 share them). Python >= 3.8.
 """
